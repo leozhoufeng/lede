@@ -46,12 +46,131 @@ jobs:
 
       - name: Update feeds
         run: |
+          echo 'src-git helloworld https://github.com/fw876/helloworld' >> ./feeds.conf.default
+          echo 'src-git kenzo https://github.com/kenzok8/openwrt-packages' >> ./feeds.conf.default
+          echo 'src-git small https://github.com/kenzok8/small' >> ./feeds.conf.default
           sed -i 's/#src-git helloworld/src-git helloworld/g' ./feeds.conf.default
           ./scripts/feeds update -a
           ./scripts/feeds install -a
 
       - name: Generate configuration file
-        run: make defconfig
+        run: | 
+          rm -f ./.config*
+          touch ./.config
+          cat >> .config <<EOF
+          #
+          # ========================固件定制部分========================
+          #
+          CONFIG_TARGET_ath79=y
+          CONFIG_TARGET_ath79_nand=y
+          CONFIG_TARGET_ath79_nand_DEVICE_netgear_wndr3700-v4=y
+          CONFIG_LIBCURL_COOKIES=y
+          CONFIG_LIBCURL_FILE=y
+          CONFIG_LIBCURL_FTP=y
+          CONFIG_LIBCURL_HTTP=y
+          CONFIG_LIBCURL_NO_SMB="!"
+          CONFIG_LIBCURL_OPENSSL=y
+          CONFIG_LIBCURL_PROXY=y
+          CONFIG_NODEJS_12=y
+          CONFIG_NODEJS_ICU_NONE=y
+          CONFIG_PACKAGE_UnblockNeteaseMusic=y
+          CONFIG_PACKAGE_UnblockNeteaseMusic-Go=y
+          CONFIG_PACKAGE_boost=y
+          CONFIG_PACKAGE_boost-program_options=y
+          CONFIG_PACKAGE_boost-system=y
+          CONFIG_PACKAGE_chinadns-ng=y
+          CONFIG_PACKAGE_coreutils-nohup=y
+          CONFIG_PACKAGE_curl=y
+          CONFIG_PACKAGE_ipt2socks=y
+          CONFIG_PACKAGE_iptables-mod-iprange=y
+          CONFIG_PACKAGE_iputils-arping=y
+          CONFIG_PACKAGE_jq=y
+          CONFIG_PACKAGE_kmod-ipt-iprange=y
+          # CONFIG_PACKAGE_kmod-nf-conntrack-netlink is not set
+          CONFIG_PACKAGE_libatomic=y
+          CONFIG_PACKAGE_libcap=y
+          CONFIG_PACKAGE_libcurl=y
+          CONFIG_PACKAGE_libmbedtls=y
+          CONFIG_PACKAGE_libnghttp2=y
+          CONFIG_PACKAGE_libstdcpp=y
+          CONFIG_PACKAGE_libuv=y
+          CONFIG_PACKAGE_libwebsockets-full=y
+          # CONFIG_PACKAGE_luci-app-accesscontrol is not set
+          # CONFIG_PACKAGE_luci-app-autoreboot is not set
+          # CONFIG_PACKAGE_luci-app-bypass_INCLUDE_ShadowsocksR_Libev_Client is not set
+          # CONFIG_PACKAGE_luci-app-bypass_INCLUDE_ShadowsocksR_Libev_Server is not set
+          # CONFIG_PACKAGE_luci-app-bypass_INCLUDE_Shadowsocks_Libev_Client is not set
+          # CONFIG_PACKAGE_luci-app-bypass_INCLUDE_Shadowsocks_Libev_Server is not set
+          # CONFIG_PACKAGE_luci-app-bypass_INCLUDE_Simple_obfs is not set
+          # CONFIG_PACKAGE_luci-app-bypass_INCLUDE_Socks5_Proxy is not set
+          # CONFIG_PACKAGE_luci-app-bypass_INCLUDE_Socks_Server is not set
+          # CONFIG_PACKAGE_luci-app-bypass_INCLUDE_Trojan is not set
+          # CONFIG_PACKAGE_luci-app-bypass_INCLUDE_Trojan-Go is not set
+          # CONFIG_PACKAGE_luci-app-bypass_INCLUDE_Xray is not set
+          # CONFIG_PACKAGE_luci-app-diskman_INCLUDE_btrfs_progs is not set
+          # CONFIG_PACKAGE_luci-app-diskman_INCLUDE_lsblk is not set
+          CONFIG_PACKAGE_luci-app-jd-dailybonus=y
+          # CONFIG_PACKAGE_luci-app-nlbwmon is not set
+          CONFIG_PACKAGE_luci-app-p910nd=y
+          CONFIG_PACKAGE_luci-app-passwall=y
+          CONFIG_PACKAGE_luci-app-passwall_INCLUDE_V2ray=y
+          CONFIG_PACKAGE_luci-app-passwall_INCLUDE_V2ray_Plugin=y
+          CONFIG_PACKAGE_luci-app-passwall_INCLUDE_Xray=y
+          CONFIG_PACKAGE_luci-app-passwall_INCLUDE_Xray_Plugin=y
+          CONFIG_PACKAGE_luci-app-pushbot=y
+          # CONFIG_PACKAGE_luci-app-rclone_INCLUDE_rclone-ng is not set
+          # CONFIG_PACKAGE_luci-app-rclone_INCLUDE_rclone-webui is not set
+          # CONFIG_PACKAGE_luci-app-ssr-plus is not set
+          # CONFIG_PACKAGE_luci-app-ssr-plus_INCLUDE_ShadowsocksR_Libev_Client is not set
+          CONFIG_PACKAGE_luci-app-ttyd=y
+          CONFIG_PACKAGE_luci-app-unblockmusic_INCLUDE_UnblockNeteaseMusic_Go=y
+          CONFIG_PACKAGE_luci-app-unblockmusic_INCLUDE_UnblockNeteaseMusic_NodeJS=y
+          # CONFIG_PACKAGE_luci-app-vsftpd is not set
+          CONFIG_PACKAGE_luci-app-webadmin=y
+          CONFIG_PACKAGE_luci-compat=y
+          CONFIG_PACKAGE_luci-i18n-p910nd-zh-cn=y
+          CONFIG_PACKAGE_luci-i18n-passwall-zh-cn=y
+          CONFIG_PACKAGE_luci-i18n-ttyd-zh-cn=y
+          CONFIG_PACKAGE_luci-i18n-webadmin-zh-cn=y
+          CONFIG_PACKAGE_luci-theme-argon=y
+          # CONFIG_PACKAGE_nlbwmon is not set
+          CONFIG_PACKAGE_node=y
+          CONFIG_PACKAGE_p910nd=y
+          CONFIG_PACKAGE_shadowsocks-libev-ss-local=y
+          CONFIG_PACKAGE_shadowsocks-libev-ss-redir=y
+          # CONFIG_PACKAGE_shadowsocksr-libev-ssr-check is not set
+          CONFIG_PACKAGE_simple-obfs=y
+          CONFIG_PACKAGE_trojan-plus=y
+          CONFIG_PACKAGE_ttyd=y
+          CONFIG_PACKAGE_unzip=y
+          CONFIG_PACKAGE_v2ray-core=y
+          CONFIG_PACKAGE_v2ray-plugin=y
+          # CONFIG_PACKAGE_vsftpd-alt is not set
+          CONFIG_PACKAGE_xray-core=y
+          CONFIG_PACKAGE_xray-plugin=y
+          CONFIG_V2RAY_CORE_COMPRESS_UPX=y
+          CONFIG_XRAY_CORE_COMPRESS_UPX=y
+          CONFIG_boost-compile-visibility-hidden=y
+          CONFIG_boost-runtime-shared=y
+          CONFIG_boost-static-and-shared-libs=y
+          CONFIG_boost-variant-release=y
+          #
+          # ========================固件定制部分结束========================
+          #
+          EOF
+          sed -i 's/^[ \t]*//g' ./.config
+          make defconfig
+          # 网络配置信息，将从 zzz-default-settings 文件的第2行开始添加
+          sed -i "2i # network config" ./package/lean/default-settings/files/zzz-default-settings
+          # 默认 IP 地址，旁路由时不会和主路由的 192.168.1.1 冲突
+          sed -i "3i uci set network.lan.ipaddr='192.168.1.5'" ./package/lean/default-settings/files/zzz-default-settings
+          sed -i "4i uci set network.lan.proto='static'" ./package/lean/default-settings/files/zzz-default-settings # 静态 IP
+          sed -i "5i uci set network.lan.type='bridge'" ./package/lean/default-settings/files/zzz-default-settings  # 接口类型：桥接
+          sed -i "6i uci set network.lan.ifname='eth0'" ./package/lean/default-settings/files/zzz-default-settings  # 网络端口：默认 eth0，第一个接口
+          sed -i "7i uci set network.lan.netmask='255.255.255.0'" ./package/lean/default-settings/files/zzz-default-settings    # 子网掩码
+          sed -i "8i uci set network.lan.gateway='192.168.1.1'" ./package/lean/default-settings/files/zzz-default-settings  # 默认网关地址（主路由 IP）
+          sed -i "9i uci set network.lan.dns='192.168.1.1'" ./package/lean/default-settings/files/zzz-default-settings  # 默认上游 DNS 地址
+          sed -i "10i uci commit network\n" ./package/lean/default-settings/files/zzz-default-settings
 
       - name: Make download
         run: |
